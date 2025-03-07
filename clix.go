@@ -3,8 +3,6 @@ package clix
 import (
 	"reflect"
 	"time"
-
-	"github.com/urfave/cli/v2"
 )
 
 // ContextReader defines the interface for reading values from a CLI context.
@@ -160,6 +158,3 @@ func setSliceValue(c ContextReader, tag string, field reflect.Value) {
 		field.Set(reflect.ValueOf(c.Float64Slice(tag)))
 	}
 }
-
-// Ensure that *cli.Context implements ContextReader
-var _ ContextReader = (*cli.Context)(nil)
