@@ -23,9 +23,20 @@ type CommandReaderV3 interface {
 // V3 converts a v3 CommandReaderV3 to a v2 ContextReader
 // example
 //
-//	clix.Parse[Config](clix.V3(cmd))
+//	 func(ctx context.Context, cmd *cli.Command) error {
+//		  config := clix.Parse[Config](clix.V3(cmd))
 func V3(cmd CommandReaderV3) ContextReader {
 	return &proxy3to2{c: cmd}
+}
+
+// ParseCommand converts a v3 CommandReaderV3 to a v2 ContextReader and uses the default Parse command,
+// it is just a shorthand for `clix.Parse[Config](clix.V3(cmd))`
+// example
+//
+//	 func(ctx context.Context, cmd *cli.Command) error {
+//		  config := clix.ParseCommand[Config](cmd)
+func ParseCommand[A any](cmd CommandReaderV3) A {
+	return Parse[A](V3(cmd))
 }
 
 type proxy3to2 struct {

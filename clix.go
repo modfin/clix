@@ -46,6 +46,11 @@ func Parse[A any](c ContextReader) A {
 	return cfg
 }
 
+// ParseContext is an alias for `clix.Parse[Config](ctx) to align with the v3 function name`
+func ParseContext[A any](ctx ContextReader) A {
+	return Parse[A](ctx)
+}
+
 // AssignValueToCliFields recursively assigns values from CLI flags to struct fields.
 // It uses reflection to iterate over the struct fields and set their values based on CLI flags.
 // Parameters:
