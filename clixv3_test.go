@@ -11,7 +11,7 @@ import (
 type mockCommandReaderV3 struct {
 	stringMap      map[string]string
 	intMap         map[string]int
-	uintMap        map[string]uint64
+	uintMap        map[string]uint
 	boolMap        map[string]bool
 	floatMap       map[string]float64
 	timestampMap   map[string]time.Time
@@ -24,7 +24,7 @@ type mockCommandReaderV3 struct {
 
 func (m *mockCommandReaderV3) String(name string) string          { return m.stringMap[name] }
 func (m *mockCommandReaderV3) Int(name string) int                { return m.intMap[name] }
-func (m *mockCommandReaderV3) Uint(name string) uint64            { return m.uintMap[name] }
+func (m *mockCommandReaderV3) Uint(name string) uint              { return m.uintMap[name] }
 func (m *mockCommandReaderV3) Bool(name string) bool              { return m.boolMap[name] }
 func (m *mockCommandReaderV3) Float(name string) float64          { return m.floatMap[name] }
 func (m *mockCommandReaderV3) Timestamp(name string) time.Time    { return m.timestampMap[name] }
@@ -41,7 +41,7 @@ func TestV3Conversion(t *testing.T) {
 	cmdReader := &mockCommandReaderV3{
 		stringMap:      map[string]string{"name": "test-name"},
 		intMap:         map[string]int{"age": 30},
-		uintMap:        map[string]uint64{"count": 100},
+		uintMap:        map[string]uint{"count": 100},
 		boolMap:        map[string]bool{"enabled": true},
 		floatMap:       map[string]float64{"price": 99.99},
 		timestampMap:   map[string]time.Time{"created": now},
