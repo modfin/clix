@@ -10,7 +10,7 @@ import (
 // mockCommandReaderV3 implements the CommandReaderV3 interface for testing
 type mockCommandReaderV3 struct {
 	stringMap      map[string]string
-	intMap         map[string]int64
+	intMap         map[string]int
 	uintMap        map[string]uint64
 	boolMap        map[string]bool
 	floatMap       map[string]float64
@@ -23,7 +23,7 @@ type mockCommandReaderV3 struct {
 }
 
 func (m *mockCommandReaderV3) String(name string) string          { return m.stringMap[name] }
-func (m *mockCommandReaderV3) Int(name string) int64              { return m.intMap[name] }
+func (m *mockCommandReaderV3) Int(name string) int                { return m.intMap[name] }
 func (m *mockCommandReaderV3) Uint(name string) uint64            { return m.uintMap[name] }
 func (m *mockCommandReaderV3) Bool(name string) bool              { return m.boolMap[name] }
 func (m *mockCommandReaderV3) Float(name string) float64          { return m.floatMap[name] }
@@ -40,7 +40,7 @@ func TestV3Conversion(t *testing.T) {
 	now := time.Now()
 	cmdReader := &mockCommandReaderV3{
 		stringMap:      map[string]string{"name": "test-name"},
-		intMap:         map[string]int64{"age": 30},
+		intMap:         map[string]int{"age": 30},
 		uintMap:        map[string]uint64{"count": 100},
 		boolMap:        map[string]bool{"enabled": true},
 		floatMap:       map[string]float64{"price": 99.99},
@@ -105,7 +105,7 @@ func TestParseWithCommandReaderV3(t *testing.T) {
 	// Create a mock CommandReaderV3
 	cmdReader := &mockCommandReaderV3{
 		stringMap:      map[string]string{"name": "test-config"},
-		intMap:         map[string]int64{"age": 25},
+		intMap:         map[string]int{"age": 25},
 		boolMap:        map[string]bool{"enabled": true},
 		floatMap:       map[string]float64{"price": 49.99},
 		durationMap:    map[string]time.Duration{"timeout": 10 * time.Minute},
