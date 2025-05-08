@@ -9,7 +9,7 @@ import (
 type CommandReaderV3 interface {
 	String(name string) string
 	Int(name string) int
-	Uint(name string) uint64
+	Uint(name string) uint
 	Bool(name string) bool
 	Float(name string) float64
 	Timestamp(name string) time.Time
@@ -56,11 +56,11 @@ func (p proxy3to2) Int64(name string) int64 {
 }
 
 func (p proxy3to2) Uint(name string) uint {
-	return uint(p.c.Uint(name))
+	return p.c.Uint(name)
 }
 
 func (p proxy3to2) Uint64(name string) uint64 {
-	return p.c.Uint(name)
+	return uint64(p.c.Uint(name))
 
 }
 
