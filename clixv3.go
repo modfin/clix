@@ -8,7 +8,7 @@ import (
 // that a v3 cli.Command must support in order to be convertible to a v2 ContextReader and the use of clix.Parse[]()
 type CommandReaderV3 interface {
 	String(name string) string
-	Int(name string) int64
+	Int(name string) int
 	Uint(name string) uint64
 	Bool(name string) bool
 	Float(name string) float64
@@ -48,11 +48,11 @@ func (p proxy3to2) String(name string) string {
 }
 
 func (p proxy3to2) Int(name string) int {
-	return int(p.c.Int(name))
+	return p.c.Int(name)
 }
 
 func (p proxy3to2) Int64(name string) int64 {
-	return p.c.Int(name)
+	return int64(p.c.Int(name))
 }
 
 func (p proxy3to2) Uint(name string) uint {
