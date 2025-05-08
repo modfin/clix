@@ -17,8 +17,8 @@ type mockCommandReaderV3 struct {
 	timestampMap   map[string]time.Time
 	durationMap    map[string]time.Duration
 	stringSliceMap map[string][]string
-	intSliceMap    map[string][]int64
-	uintSliceMap   map[string][]uint64
+	intSliceMap    map[string][]int
+	uintSliceMap   map[string][]uint
 	floatSliceMap  map[string][]float64
 }
 
@@ -30,8 +30,8 @@ func (m *mockCommandReaderV3) Float(name string) float64          { return m.flo
 func (m *mockCommandReaderV3) Timestamp(name string) time.Time    { return m.timestampMap[name] }
 func (m *mockCommandReaderV3) Duration(name string) time.Duration { return m.durationMap[name] }
 func (m *mockCommandReaderV3) StringSlice(name string) []string   { return m.stringSliceMap[name] }
-func (m *mockCommandReaderV3) IntSlice(name string) []int64       { return m.intSliceMap[name] }
-func (m *mockCommandReaderV3) UintSlice(name string) []uint64     { return m.uintSliceMap[name] }
+func (m *mockCommandReaderV3) IntSlice(name string) []int         { return m.intSliceMap[name] }
+func (m *mockCommandReaderV3) UintSlice(name string) []uint       { return m.uintSliceMap[name] }
 func (m *mockCommandReaderV3) FloatSlice(name string) []float64   { return m.floatSliceMap[name] }
 
 // TestV3Conversion tests the V3 function that converts CommandReaderV3 to ContextReader
@@ -47,8 +47,8 @@ func TestV3Conversion(t *testing.T) {
 		timestampMap:   map[string]time.Time{"created": now},
 		durationMap:    map[string]time.Duration{"timeout": 5 * time.Minute},
 		stringSliceMap: map[string][]string{"tags": {"tag1", "tag2", "tag3"}},
-		intSliceMap:    map[string][]int64{"values": {1, 2, 3}},
-		uintSliceMap:   map[string][]uint64{"ids": {101, 102, 103}},
+		intSliceMap:    map[string][]int{"values": {1, 2, 3}},
+		uintSliceMap:   map[string][]uint{"ids": {101, 102, 103}},
 		floatSliceMap:  map[string][]float64{"rates": {1.1, 2.2, 3.3}},
 	}
 
@@ -110,7 +110,7 @@ func TestParseWithCommandReaderV3(t *testing.T) {
 		floatMap:       map[string]float64{"price": 49.99},
 		durationMap:    map[string]time.Duration{"timeout": 10 * time.Minute},
 		stringSliceMap: map[string][]string{"tags": {"tag1", "tag2"}},
-		intSliceMap:    map[string][]int64{"values": {10, 20, 30}},
+		intSliceMap:    map[string][]int{"values": {10, 20, 30}},
 		floatSliceMap:  map[string][]float64{"rates": {0.1, 0.2}},
 	}
 

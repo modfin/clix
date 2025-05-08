@@ -15,8 +15,8 @@ type CommandReaderV3 interface {
 	Timestamp(name string) time.Time
 	Duration(name string) time.Duration
 	StringSlice(name string) []string
-	IntSlice(name string) []int64
-	UintSlice(name string) []uint64
+	IntSlice(name string) []int
+	UintSlice(name string) []uint
 	FloatSlice(name string) []float64
 }
 
@@ -89,37 +89,37 @@ func (p proxy3to2) StringSlice(name string) []string {
 }
 
 func (p proxy3to2) IntSlice(name string) []int {
-	return toIntSlice(p.c.IntSlice(name))
-}
-
-func (p proxy3to2) Int64Slice(name string) []int64 {
 	return p.c.IntSlice(name)
 }
 
+func (p proxy3to2) Int64Slice(name string) []int64 {
+	return toInt64Slice(p.c.IntSlice(name))
+}
+
 func (p proxy3to2) UintSlice(name string) []uint {
-	return toUintSlice(p.c.UintSlice(name))
+	return p.c.UintSlice(name)
 }
 
 func (p proxy3to2) Uint64Slice(name string) []uint64 {
-	return p.c.UintSlice(name)
+	return toUint64Slice(p.c.UintSlice(name))
 }
 
 func (p proxy3to2) Float64Slice(name string) []float64 {
 	return p.c.FloatSlice(name)
 }
 
-func toIntSlice(int64s []int64) []int {
-	ints := make([]int, len(int64s))
-	for i, v := range int64s {
-		ints[i] = int(v)
+func toInt64Slice(sl []int) []int64 {
+	ints := make([]int64, len(sl))
+	for i, v := range sl {
+		ints[i] = int64(v)
 	}
 	return ints
 }
 
-func toUintSlice(uint64s []uint64) []uint {
-	ints := make([]uint, len(uint64s))
-	for i, v := range uint64s {
-		ints[i] = uint(v)
+func toUint64Slice(sl []uint) []uint64 {
+	ints := make([]uint64, len(sl))
+	for i, v := range sl {
+		ints[i] = uint64(v)
 	}
 	return ints
 }
