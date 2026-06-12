@@ -1,6 +1,8 @@
 package clix
 
 import (
+	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -227,6 +229,39 @@ func TestParseMixedConfig(t *testing.T) {
 	assert.Equal(t, "db.example.com", config.Database.Host)
 	assert.Equal(t, 3306, config.Database.Port)
 	assert.Equal(t, []string{"replica1", "replica2", "replica3"}, config.Database.Replicas)
+}
+
+// kib - minimal encoding.TextUnmarshaler
+type kib int64
+
+func (k *kib) UnmarshalText(text []byte) error {
+	n, err := strconv.ParseInt(strings.TrimSuffix(string(text), "K"), 10, 64)
+	if err != nil {
+		return err
+	}
+	*k = kib(n * 1024)
+	return nil
+}
+
+type SizeConfig struct {
+	CacheSize    *kib `cli:"cache-size"`
+	BufferSize   kib  `cli:"buffer-size"`
+	UnsetSize    kib  `cli:"unset-size"`
+	UnsetSizePtr *kib `cli:"unset-size-ptr"`
+}
+
+func TestParseTextUnmarshalerTypes(t *testing.T) {
+	ctx := newMockContext()
+	ctx.stringMap["cache-size"] = "10K"
+	ctx.stringMap["buffer-size"] = "4K"
+
+	config := Parse[SizeConfig](ctx)
+
+	assert.NotNil(t, config.CacheSize)
+	assert.Equal(t, kib(10*1024), *config.CacheSize)
+	assert.Equal(t, kib(4*1024), config.BufferSize)
+	assert.Zero(t, config.UnsetSize)
+	assert.Nil(t, config.UnsetSizePtr)
 }
 
 func TestMissingValues(t *testing.T) {
