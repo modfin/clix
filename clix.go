@@ -1,9 +1,14 @@
 package clix
 
 import (
+	"encoding"
 	"reflect"
 	"time"
 )
+
+// textUnmarshalerType is the reflect.Type of encoding.TextUnmarshaler, used to
+// detect fields that can parse themselves from a string.
+var textUnmarshalerType = reflect.TypeOf((*encoding.TextUnmarshaler)(nil)).Elem()
 
 // ContextReader defines the interface for reading values from a CLI context.
 // This abstraction allows for easier testing by allowing mock implementations.
@@ -103,6 +108,11 @@ func AssignValueToCliFields(v interface{}, prefix string, c ContextReader) {
 				continue
 			}
 
+			// Handle types that implement encoding.TextUnmarshaler
+			if setTextUnmarshalerValue(c, fullTag, field) {
+				continue
+			}
+
 			// Handle other types based on their Kind
 			setFieldValue(c, fullTag, field)
 		}
@@ -120,6 +130,34 @@ func setTimeValue(c ContextReader, tag string, field reflect.Value) {
 			field.Set(reflect.ValueOf(*t))
 		}
 	}
+}
+
+// setTextUnmarshalerValue handles fields whose type knows how to parse itself
+// from a string through encoding.TextUnmarshaler
+func setTextUnmarshalerValue(c ContextReader, tag string, field reflect.Value) bool {
+	t := field.Type()
+	switch {
+	// Pointer field
+	case t.Kind() == reflect.Ptr && t.Implements(textUnmarshalerType):
+		raw := c.String(tag)
+		if raw == "" {
+			return true
+		}
+		ptr := reflect.New(t.Elem())
+		if err := ptr.Interface().(encoding.TextUnmarshaler).UnmarshalText([]byte(raw)); err == nil {
+			field.Set(ptr)
+		}
+		return true
+	// Value field
+	case t.Kind() != reflect.Ptr && reflect.PointerTo(t).Implements(textUnmarshalerType):
+		raw := c.String(tag)
+		if raw == "" {
+			return true
+		}
+		_ = field.Addr().Interface().(encoding.TextUnmarshaler).UnmarshalText([]byte(raw))
+		return true
+	}
+	return false
 }
 
 // setFieldValue sets the value of a field based on its Kind.
