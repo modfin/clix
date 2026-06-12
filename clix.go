@@ -108,9 +108,7 @@ func AssignValueToCliFields(v interface{}, prefix string, c ContextReader) {
 				continue
 			}
 
-			// Handle types that parse themselves from a string via
-			// encoding.TextUnmarshaler, e.g. a custom byte-size type parsing
-			// values like "10 MB" or "1 GB".
+			// Handle types that implement encoding.TextUnmarshaler
 			if setTextUnmarshalerValue(c, fullTag, field) {
 				continue
 			}
