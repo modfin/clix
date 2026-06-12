@@ -139,7 +139,7 @@ func setTimeValue(c ContextReader, tag string, field reflect.Value) {
 func setTextUnmarshalerValue(c ContextReader, tag string, field reflect.Value) bool {
 	t := field.Type()
 	switch {
-	// Pointer field, e.g. *bytesize.ByteSize: allocate then unmarshal.
+	// Pointer field
 	case t.Kind() == reflect.Ptr && t.Implements(textUnmarshalerType):
 		raw := c.String(tag)
 		if raw == "" {
@@ -150,7 +150,7 @@ func setTextUnmarshalerValue(c ContextReader, tag string, field reflect.Value) b
 			field.Set(ptr)
 		}
 		return true
-	// Value field whose pointer implements the interface, e.g. bytesize.ByteSize.
+	// Value field
 	case t.Kind() != reflect.Ptr && reflect.PointerTo(t).Implements(textUnmarshalerType):
 		raw := c.String(tag)
 		if raw == "" {
